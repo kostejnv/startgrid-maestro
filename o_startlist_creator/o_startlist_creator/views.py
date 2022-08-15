@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from minizinc import Instance, Model, Solver
+from django.core.mail import send_mail
 
 def hello(request, name):
     return HttpResponse(f"<h2>Hello {name}</h2>")
@@ -27,6 +28,10 @@ def minizinc(request, n):
     result = instance.solve()
     # Output the array q
     return HttpResponse(f'<h2>{result["q"]}</h2>')
+
+def send_me_email(request):
+    send_mail('Django', "Toto je zkouska posilani emailu", 'v.kostejn.experimental@gmail.com', ['v.kostejn.vk@gmail.com'], fail_silently=False)
+    return HttpResponse("Email was sent")
 
 # if __name__ == '__main__':
 #     minizinc(None)

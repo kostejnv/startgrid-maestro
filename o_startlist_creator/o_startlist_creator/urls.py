@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import hello, minizinc
+from .views import hello, minizinc, send_me_email
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/<name>', hello),
-    path('nqueens/<n>', minizinc)
+    path('nqueens/<n>', minizinc),
+    path('send_me_email', send_me_email)
 ]
