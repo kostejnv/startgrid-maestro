@@ -127,8 +127,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # email setting
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'v.kostejn.experimental@gmail.com'
+with open(os.path.join(os.path.dirname(__file__), '../../.secrets/email_sender')) as f:
+    EMAIL_HOST_USER = f.read().strip()
 with open(os.path.join(os.path.dirname(__file__), '../../.secrets/email_pass')) as f:
     EMAIL_HOST_PASSWORD = f.read().strip()
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+CSRF_TRUSTED_ORIGINS = ['chrome-extension://gmmkjpcadciiokjpikmkkmapphbmdjok']
