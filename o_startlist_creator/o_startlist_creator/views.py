@@ -10,6 +10,8 @@ import os
 
 from types import SimpleNamespace
 import multiprocessing
+import logging
+import datetime
 
 with open(os.path.join(os.path.dirname(__file__), '../../.secrets/communication_key')) as f:
     SECURITY_KEY = f.read().strip()
@@ -77,8 +79,14 @@ def solve_and_send(event:Event, email:str):
     """
         function for multiproccessing
     """
-    event = MainSolver().solve(event)
-    EmailSender(None, None).send(email, event)
+
+
+    try:
+        event = MainSolver().solve(event)
+        EmailSender(None, None).send(email, event)
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error(f"{datetime.datetime.now()} - {e.args}")
 
 
 def DEBUG_get_table(event_json, entries_json, courses_file) -> json:
