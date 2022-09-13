@@ -15,7 +15,7 @@ with open(os.path.join(os.path.dirname(__file__), '../../.secrets/communication_
     SECURITY_KEY = f.read().strip()
 
 def hello(request, name):
-    return HttpResponse(f"<h2>Hello {name}</h2>")
+    return HttpResponse(f"<h2>Hello {name} 2.0</h2>")
 
 def minizinc(request, n):
     # Load n-Queens model from file
@@ -70,7 +70,7 @@ def solve_event(request) -> None:
                 multiprocessing.Process(target=solve_and_send, args=[event, email]).start()
                 return HttpResponse(status=200)
             except:
-                return HttpResponse(status=404)
+                return HttpResponse(status=500)
     return HttpResponse(status=404)
 
 def solve_and_send(event:Event, email:str):
