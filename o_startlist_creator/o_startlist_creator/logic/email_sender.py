@@ -1,6 +1,9 @@
+from asyncio.log import logger
 from o_startlist_creator.logic.event import Event
 from o_startlist_creator.settings import EMAIL_HOST_USER
 from django.core.mail import EmailMessage
+import logging
+import datetime
 
 DEFAULT_MSG = ''
 DEFAULT_SUBJECT = ''
@@ -21,6 +24,10 @@ class EmailSender:
             [receiver],
         )
         email.attach(f'startovni_rost_{event.id}.csv', attachement, 'text/csv')
-        email.send(fail_silently=True)
+        try:
+            email.send(fail_silently=False)
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.error(f"{datetime.datetime.now()} - {e.args}")
         return attachement
 

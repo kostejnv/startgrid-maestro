@@ -81,11 +81,11 @@ def solve_and_send(event:Event, email:str):
     EmailSender(None, None).send(email, event)
 
 
-# def DEBUG_get_table(event_json, entries_json, courses_file) -> json:
-#     event = Event()
-#     event.DEBUG_add_dat_from_oris(event_json, entries_json)
-#     event.add_data_from_courses_file(courses_file)
-#     return event.export_input_data_to_json()
+def DEBUG_get_table(event_json, entries_json, courses_file) -> json:
+    event = Event()
+    event.DEBUG_add_dat_from_oris(event_json, entries_json)
+    event.add_data_from_courses_file(courses_file)
+    return event.export_input_data_to_dict()
 
 # if __name__ == '__main__':
 #     minizinc(None)

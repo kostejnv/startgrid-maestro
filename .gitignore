@@ -132,6 +132,6 @@ dmypy.json
 .secrets/*
 
 # debug files
-o_startlist_creator/o_startlist_creator/test.py
+test.py
 o_startlist_creator/o_startlist_creator/DEBUG
 
