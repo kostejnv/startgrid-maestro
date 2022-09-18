@@ -83,7 +83,7 @@ def solve_and_send(event:Event, email:str):
 
     try:
         event = MainSolver().solve(event)
-        EmailSender(None, None).send(email, event)
+        EmailSender().send(email, event)
     except Exception as e:
         logger = logging.getLogger(__name__)
         logger.error(f"{datetime.datetime.now()} - {e.args}")

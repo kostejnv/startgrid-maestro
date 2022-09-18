@@ -54,7 +54,7 @@ class Event:
     def add_data_from_courses_file(self, file_str: str) -> None:
         Courses_manager(file_str).add_courses_info_to_cats(self)
 
-    def export_input_data_to_dict(self) -> json: #TODO
+    def export_input_data_to_dict(self) -> json:
         if not self.has_data:
             raise "ERROR: No data imported"
         event_dict = self.__dict__
@@ -93,7 +93,7 @@ def parse_event(event_json:json) -> Event:
     event.organizator = event_json.organizator
     event.region = event_json.region
     event.discipline = event_json.discipline
-    event.capacity = 5 #TODO
+    event.capacity = 5
     event.date = event_json.date
     event.solved = False
     event.has_data = True

@@ -221,8 +221,6 @@ class Minizinc(Solver):
         _, lower_bound = LowerBoundSolver().solve(deepcopy(event))
         return lower_bound
 
-# [self.__generate_category_all_starts_query(cat) + (" ++ " if idx < len(cats) - 1 else "") for idx, cat in enumerate(cats.values())] #TODO: check it
-
     def __generate_all_athletes_starts_query(self, cats):
         query = ""
         for idx, cat in enumerate(cats):

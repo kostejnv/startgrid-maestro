@@ -9,9 +9,9 @@ DEFAULT_MSG = ''
 DEFAULT_SUBJECT = ''
 
 class EmailSender:
-    def __init__(self, msg:str, subject:str) -> None:
-        self.msg = msg if msg else DEFAULT_MSG
-        self.subject = subject if subject else DEFAULT_SUBJECT
+    def __init__(self) -> None:
+        self.msg = DEFAULT_MSG
+        self.subject = DEFAULT_SUBJECT
         self.sender = 'v.kostejn.vk@gmail.com'
 
     def send(self, receiver:str, event: Event) -> str:
