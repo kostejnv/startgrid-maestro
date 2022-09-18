@@ -1,7 +1,7 @@
 from collections import Counter
 
 
-class Validator:
+class CoursesValidator:
     def __init__(self, event, schedule_length):
         self.schedule_length = schedule_length
         self.event = event
@@ -103,3 +103,14 @@ class Validator:
                     print(f"WARNING: categories {cat.name} and {same_course_cat.name} have same courses and overlap each other")
                     return False
         return True
+
+class EmailValidator:
+    def __init__(self, email:str) -> None:
+        self.email = email
+
+    def validate(self) -> bool:
+        if '@' in self.email and '.' in self.email.split('@')[1]:
+            return True
+        else:
+            return False
+            

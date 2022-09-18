@@ -13,6 +13,8 @@ import multiprocessing
 import logging
 import datetime
 
+from o_startlist_creator.logic.validator import EmailValidator
+
 with open(os.path.join(os.path.dirname(__file__), '../../.secrets/communication_key')) as f:
     SECURITY_KEY = f.read().strip()
 
@@ -55,8 +57,16 @@ def get_event(request) -> json:
             oris_id = get_data.oris_id
             courses_str = get_data.courses_str
             event = Event()
-            event.add_dat_from_oris(oris_id)
-            event.add_data_from_courses_file(courses_str)
+
+            try:
+                event.add_dat_from_oris(oris_id)
+            except Exception as e:
+                return HttpResponse(status=501)
+            try:
+                event.add_data_from_courses_file(courses_str)
+            except Exception as e:
+                return HttpResponse(status=502)
+
             return JsonResponse(event.export_input_data_to_dict())
     return HttpResponse(status=404)
 
@@ -68,7 +78,14 @@ def solve_event(request) -> None:
             try:
                 json_event = post_data.event
                 email = post_data.email
-                event = parse_event(json_event)
+                if not EmailValidator(email).validate():
+                    return HttpResponse(status=503)
+                try:
+                    event = parse_event(json_event)
+                except ImportError:
+                    return HttpResponse(status=502)
+                except Exception as e:
+                    return HttpResponse(status=501)
                 multiprocessing.Process(target=solve_and_send, args=[event, email]).start()
                 return HttpResponse(status=200)
             except:

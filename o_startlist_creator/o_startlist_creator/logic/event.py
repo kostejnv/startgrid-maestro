@@ -2,6 +2,7 @@
 
 import csv
 import json
+import string
 from o_startlist_creator.logic.oris_import import *
 from o_startlist_creator.logic.category import Category, parse_category
 
@@ -93,9 +94,12 @@ def parse_event(event_json:json) -> Event:
     event.organizator = event_json.organizator
     event.region = event_json.region
     event.discipline = event_json.discipline
-    event.capacity = 5
+    if not event_json.capacity.isnumeric() or event_json.capacity < 1:
+        raise ImportError()
+    event.capacity = event_json.capacity
     event.date = event_json.date
     event.solved = False
     event.has_data = True
+
     event.categories = to_dict([parse_category(cat_json) for cat_json in event_json.categories])
     return event
