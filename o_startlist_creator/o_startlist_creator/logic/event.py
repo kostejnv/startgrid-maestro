@@ -94,9 +94,9 @@ def parse_event(event_json:json) -> Event:
     event.organizator = event_json.organizator
     event.region = event_json.region
     event.discipline = event_json.discipline
-    if not event_json.capacity.isnumeric() or event_json.capacity < 1:
+    if not event_json.capacity.isnumeric() or int(event_json.capacity) < 1:
         raise ImportError()
-    event.capacity = event_json.capacity
+    event.capacity = int(event_json.capacity)
     event.date = event_json.date
     event.solved = False
     event.has_data = True
