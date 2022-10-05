@@ -46,7 +46,7 @@ def minizinc(request, n):
     return HttpResponse(f'<h2>{result["q"]}</h2>')
 
 def error(request):
-    logging.getLogger(__name__).error("Pokusny error")
+    logging.getLogger(__name__).critical("Pokusny error")
     return HttpResponse("Error uspesne odeslan")
 
 def send_me_email(request):
@@ -64,16 +64,16 @@ def get_event(request) -> json:
                 courses_str = get_data.courses_str
                 event = Event()
 
-                if event.add_dat_from_oris(oris_id):
+                if not event.add_dat_from_oris(oris_id):
                     return HttpResponse(status=501)
-                if event.add_data_from_courses_file(courses_str):
+                if not event.add_data_from_courses_file(courses_str):
                     return HttpResponse(status=502)
 
                 logging.getLogger(__name__).info("get_event method successfully processed")
                 return JsonResponse(event.export_input_data_to_dict())
         return HttpResponse(status=404)
     except Exception as e:
-        logging.getLogger(__name__).error(f'get_event failed with {e}')
+        logging.getLogger(__name__).critical(f'get_event failed with {e}')
         return HttpResponse(status=500)
 
 
@@ -95,7 +95,7 @@ def solve_event(request) -> None:
                 return HttpResponse(status=200)
         return HttpResponse(status=404)
     except Exception as e:
-        logging.getLogger(__name__).error(f'solve_event failed with {e}')
+        logging.getLogger(__name__).critical(f'solve_event failed with {e}')
         return HttpResponse(status=500)
 
 def solve_and_send(event:Event, email:str):
@@ -108,7 +108,7 @@ def solve_and_send(event:Event, email:str):
         logging.getLogger(__name__).info(f"event {event.id} solved!\tclub: {event.organizator}\t athletes: {sum([cat.get_category_count() for cat in int_cat])}\t length: {max([cat.get_last_athlete_startime() for cat in int_cat])}")
         EmailSender().send(email, event)
     except Exception as e:
-        logging.getLogger(__name__).error(f'solve_and_send failed with {e}')
+        logging.getLogger(__name__).critical(f'solve_and_send failed with {e}')
 
 
 def DEBUG_get_table(event_json, entries_json, courses_file) -> json:
