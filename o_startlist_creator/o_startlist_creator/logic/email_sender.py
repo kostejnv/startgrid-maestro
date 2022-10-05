@@ -5,8 +5,13 @@ from django.core.mail import EmailMessage
 import logging
 import datetime
 
-DEFAULT_MSG = ''
-DEFAULT_SUBJECT = ''
+DEFAULT_MSG = """Hezký den,
+váš startovní rošt byl vytvořen. Naleznete ho v příloze.
+
+Pokud máte jakékoli připomínky nebo nápady na vylepšení, stačí odpovědět na tento email. Budu rád za každou zpětnou vazbu.
+Víťa Koštejn
+"""
+DEFAULT_SUBJECT = 'Startovní rošt vytvořen'
 
 class EmailSender:
     def __init__(self) -> None:
@@ -24,10 +29,6 @@ class EmailSender:
             [receiver],
         )
         email.attach(f'startovni_rost_{event.id}.csv', attachement, 'text/csv')
-        try:
-            email.send(fail_silently=False)
-        except Exception as e:
-            logger = logging.getLogger(__name__)
-            logger.error(f"{datetime.datetime.now()} - {e.args}")
+        email.send(fail_silently=False)
         return attachement
 

@@ -26,6 +26,12 @@ class Category:
         category_dict['athletes_count'] = len(category_dict['athletes'])
         return category_dict
 
+    def get_last_athlete_startime(self):
+        if self.final_interval == None or self.final_start == None:
+            return 0
+        else:
+            return self.final_start + (self.get_category_count() - 1) * self.final_interval
+
 def parse_category(cat_json:json) -> Category:
     cat = Category(cat_json.name)
     cat.athletes = [parse_athlete(athlete_json) for athlete_json in cat_json.athletes]

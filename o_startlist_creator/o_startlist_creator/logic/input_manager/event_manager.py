@@ -12,4 +12,4 @@ class Event_manager:
         event.date = event_json["Date"]
         event.discipline = event_json["Discipline"]["ShortName"]
         event.region = event_json["Region"]
-        event.organizator = 'DOPLNIT' #TODO
+        event.organizator = event_json["Org1"]["Abbr"]

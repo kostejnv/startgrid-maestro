@@ -10,7 +10,7 @@ class CoursesValidator:
     def validate_schedule(self):
         was_event_valid = self.__validate_event()
         if was_event_valid: self.schedule = self.__create_schedule(self.event)
-        self.__print_schedule(self.schedule)
+        #self.__print_schedule(self.schedule)
         if (
                 was_event_valid and
                 self.__validate_length() and

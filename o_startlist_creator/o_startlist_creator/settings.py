@@ -29,33 +29,40 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+ADMINS = [("Koste", "v.kostejn.vk@gmail.com")]
+
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'file': {
-            'level': 'WARNING',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'staging.log',
+            'formatter': 'verbose'
         },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+        }
     },
     'loggers': {
         '': {
-            'handlers': ['file'],
-            'level': 'WARNING',
-            'propagate': True,
-        },
-        'django': {
-            'handlers': ['file'],
-            'level': 'WARNING',
-            'propagate': True,
-        },
-        'django.request': {
-            'handlers': ['file'],
-            'level': 'WARNING',
-            'propagate': True,
-        },
-    },
+            'handlers': ['mail_admins', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        }
+    }
 }
 
 
