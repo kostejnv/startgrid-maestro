@@ -25,18 +25,11 @@ with open(os.path.join(os.path.dirname(__file__), '../../.secrets/secret_key')) 
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 ADMINS = [("Koste", "v.kostejn.vk@gmail.com")]
-
-SECURE_SSL_REDIRECT = True
-SECURE_HSTS_SECONDS = 60
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE =True
 
 LOGGING = {
     'version': 1,

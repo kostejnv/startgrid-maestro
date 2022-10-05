@@ -54,7 +54,7 @@ def send_me_email(request):
     send_mail('Django', "Toto je zkouska posilani emailu", 'v.kostejn.experimental@gmail.com', ['v.kostejn.vk@gmail.com'], fail_silently=False)
     return HttpResponse("Email was sent")
 
-#@csrf_exempt
+@csrf_exempt
 def get_event(request) -> json:
     try:
         if request.method == "POST" and request.accepts("application/json"):
@@ -77,7 +77,7 @@ def get_event(request) -> json:
         logging.getLogger(__name__).critical(f'get_event failed with {e}')
         return HttpResponse(status=500)
 
-#@csrf_exempt
+@csrf_exempt
 def solve_event(request) -> None:
     try:
         if request.method == 'POST' and request.accepts("application/json"):
