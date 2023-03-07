@@ -39,14 +39,16 @@ class Event:
         except Exception as e:
             logging.getLogger(__name__).info(f"oris downloads was unsuccessful with exception {e}")
             return False
+        
+        if entries_json['Status'] == "OK":  # check for valid ID
+            self.__add_general_info(event_json)
+            self.__add_classes_info(event_json)
+            self.__add_athletes(entries_json)
+            ConstrainsManager().add_constraints_to_cats(self)
 
-        self.__add_general_info(event_json)
-        self.__add_classes_info(event_json)
-        self.__add_athletes(entries_json)
-        ConstrainsManager().add_constraints_to_cats(self)
-
-        self.has_data = True
-        return True
+            self.has_data = True
+            return True
+        return False
 
     def DEBUG_add_dat_from_oris(self, event_json:json, entries_json:json) -> None:
         self.__add_general_info(event_json)
