@@ -134,4 +134,5 @@ dmypy.json
 # debug files
 test.py
 o_startlist_creator/o_startlist_creator/DEBUG
+frontend_communication
 

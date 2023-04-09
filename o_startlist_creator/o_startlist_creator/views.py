@@ -19,40 +19,6 @@ from o_startlist_creator.logic.validator import EmailValidator
 with open(os.path.join(os.path.dirname(__file__), '../../.secrets/communication_key')) as f:
     SECURITY_KEY = f.read().strip()
 
-def hello(request, name):
-    return HttpResponse(f"<h2>Hello {name} 2.0</h2>")
-
-def minizinc(request, n):
-    # Load n-Queens model from file
-    nqueens = Model()
-    nqueens.add_string("""
-        int: n; % The number of queens.
-
-        array [1..n] of var 1..n: q;
-
-        include "alldifferent.mzn";
-
-        constraint alldifferent(q);
-        constraint alldifferent(i in 1..n)(q[i] + i);
-        constraint alldifferent(i in 1..n)(q[i] - i);"""
-    )
-    # Find the MiniZinc solver configuration for Gecode
-    gecode = Solver.lookup("gecode")
-    # Create an Instance of the n-Queens model for Gecode
-    instance = Instance(gecode, nqueens)
-    # Assign 4 to n
-    instance["n"] = int(n)
-    result = instance.solve()
-    # Output the array q
-    return HttpResponse(f'<h2>{result["q"]}</h2>')
-
-def error(request):
-    logging.getLogger(__name__).critical("Pokusny error")
-    return HttpResponse("Error uspesne odeslan")
-
-def send_me_email(request):
-    send_mail('Django', "Toto je zkouska posilani emailu", 'v.kostejn.experimental@gmail.com', ['v.kostejn.vk@gmail.com'], fail_silently=False)
-    return HttpResponse("Email was sent")
 
 @csrf_exempt
 def get_event(request) -> json:

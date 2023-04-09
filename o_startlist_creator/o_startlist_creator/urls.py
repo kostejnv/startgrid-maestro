@@ -15,14 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import hello, minizinc, send_me_email, get_event, solve_event, error
+from .views import get_event, solve_event
+
+ROOT_URI = 'api/'
+def get_full_request_URI(partially_request:str)-> str:
+    return ROOT_URI+partially_request
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('hello/<name>', hello),
-    path('nqueens/<n>', minizinc),
-    path('send_me_email', send_me_email),
-    path('get_event', get_event),
-    path('solve', solve_event),
-    path('error',error)
+    path(get_full_request_URI('admin/'), admin.site.urls),
+    path(get_full_request_URI('get_event'), get_event),
+    path(get_full_request_URI('solve'), solve_event),
 ]
