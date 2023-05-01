@@ -3,7 +3,7 @@ from .validator import CoursesValidator
 from .solvers.minizinc_solver import Minizinc
 import datetime
 
-SOLVER_TIMEOUT = 10
+SOLVER_TIMEOUT = 600
 
 class Solver:
     def __init__(self) -> None:
