@@ -121,7 +121,7 @@ class Minizinc(Solver):
                 
                 % ----------------------------------------------
                 % solve
-                solve minimize cmax - (earlinessWeight * schedule_earliness()/sum(priority));
+                solve minimize cmax + (earlinessWeight * schedule_earliness()/sum(priority));
                 
                 output ["Cmax: \(cmax)\\n"] ++ ["\(i)\\tstart: \(Ss[i])\\tperiod: \(Gs[i]) \\n" | i in Categories];
             '''
