@@ -1,6 +1,6 @@
 from asyncio.log import logger
-from o_startlist_creator.logic.event import Event
-from o_startlist_creator.settings import EMAIL_HOST_USER
+from .event import Event
+from ..settings import EMAIL_HOST_USER
 from django.core.mail import EmailMessage
 import logging
 import datetime

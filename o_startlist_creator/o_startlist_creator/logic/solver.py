@@ -1,6 +1,6 @@
-from o_startlist_creator.logic.event import Event
-from o_startlist_creator.logic.validator import CoursesValidator
-from o_startlist_creator.logic.solvers.minizinc_solver import Minizinc
+from .event import Event
+from .validator import CoursesValidator
+from .solvers.minizinc_solver import Minizinc
 import datetime
 
 SOLVER_TIMEOUT = 10

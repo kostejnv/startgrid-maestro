@@ -1,5 +1,5 @@
-from o_startlist_creator.logic.categories_modificators.courses_joiner_low import CoursesJoinerLow
-from o_startlist_creator.logic.solvers.solver import Solver
+from ..categories_modificators.courses_joiner_low import CoursesJoinerLow
+from ..solvers.solver import Solver
 
 
 def first_possible_minute(cat, schedule, capacity):

@@ -1,8 +1,8 @@
-from o_startlist_creator.logic.solvers.solver import Solver
-from o_startlist_creator.logic.solvers.solver_utils import set_all_intervals_to_power_2
+from ..solvers.solver import Solver
+from ..solvers.solver_utils import set_all_intervals_to_power_2
 import copy
 from math import log2, ceil
-from o_startlist_creator.logic.categories_modificators.courses_joiner_low import CoursesJoinerLow
+from ..categories_modificators.courses_joiner_low import CoursesJoinerLow
 
 
 class BestIntervalChooser(Solver):

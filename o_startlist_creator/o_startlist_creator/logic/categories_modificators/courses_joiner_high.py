@@ -1,5 +1,5 @@
-from o_startlist_creator.logic.category import Category
-from o_startlist_creator.logic.categories_modificators.utils import to_dict, set_all_intervals_to_power_2
+from ..category import Category
+from ..categories_modificators.utils import to_dict, set_all_intervals_to_power_2
 from copy import deepcopy
 
 

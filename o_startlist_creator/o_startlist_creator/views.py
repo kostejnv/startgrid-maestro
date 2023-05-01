@@ -3,10 +3,10 @@ import json
 from django.http import HttpResponse, JsonResponse
 from minizinc import Instance, Model, Solver
 from django.core.mail import send_mail
-from o_startlist_creator.logic.event import Event, parse_event
-from o_startlist_creator.logic.solver import Solver as MainSolver
+from .logic.event import Event, parse_event
+from .logic.solver import Solver as MainSolver
 from django.views.decorators.csrf import csrf_exempt
-from o_startlist_creator.logic.email_sender import EmailSender
+from .logic.email_sender import EmailSender
 import os
 
 from types import SimpleNamespace
@@ -14,7 +14,7 @@ import multiprocessing
 import logging
 import datetime
 
-from o_startlist_creator.logic.validator import EmailValidator
+from .logic.validator import EmailValidator
 
 with open(os.path.join(os.path.dirname(__file__), '../../.secrets/communication_key')) as f:
     SECURITY_KEY = f.read().strip()
@@ -44,7 +44,7 @@ def get_event(request) -> json:
         return HttpResponse(status=500)
 
 @csrf_exempt
-def solve_event(request) -> None:
+def solve_event(request) -> HttpResponse:
     try:
         if request.method == 'POST' and request.accepts("application/json"):
             post_data = json.loads(request.body, object_hook=lambda d: SimpleNamespace(**d))

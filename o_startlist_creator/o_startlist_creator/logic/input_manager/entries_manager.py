@@ -1,4 +1,4 @@
-from o_startlist_creator.logic.athlete import Athlete
+from ..athlete import Athlete
 import json
 
 class Entries_manager:

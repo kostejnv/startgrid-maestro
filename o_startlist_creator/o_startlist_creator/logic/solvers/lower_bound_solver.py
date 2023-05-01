@@ -1,4 +1,4 @@
-from o_startlist_creator.logic.solvers.solver import Solver
+from ..solvers.solver import Solver
 
 
 class LowerBoundSolver(Solver):

@@ -1,5 +1,5 @@
-from o_startlist_creator.logic.category import Category
-from o_startlist_creator.logic.event import Event
+from ..category import Category
+from ..event import Event
 from math import ceil,log2
 
 def set_all_intervals_same(cats):

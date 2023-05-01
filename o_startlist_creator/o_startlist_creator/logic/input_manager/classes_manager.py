@@ -1,5 +1,5 @@
 import json
-from o_startlist_creator.logic.category import Category
+from ..category import Category
 
 
 class Classes_manager:

@@ -1,5 +1,5 @@
 import json
-from o_startlist_creator.logic.athlete import Athlete, parse_athlete
+from ..logic.athlete import Athlete, parse_athlete
 
 class Category:
     def __init__(self, name):
