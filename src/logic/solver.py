@@ -9,7 +9,7 @@ class Solver:
     def __init__(self) -> None:
         pass
 
-    def solve(self, event:Event) -> None:
+    def solve(self, event:Event) -> Event:
         solver = Minizinc(timeout=datetime.timedelta(seconds=SOLVER_TIMEOUT))
         individual_cats, schedule_length = solver.solve(event)
         event = self.__merge_solved_cats_to_event(individual_cats, event)

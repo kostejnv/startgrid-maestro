@@ -1,20 +1,16 @@
-import imp
 import json
 from django.http import HttpResponse, JsonResponse
-from minizinc import Instance, Model, Solver
-from django.core.mail import send_mail
-from .logic.event import Event, parse_event
-from .logic.solver import Solver as MainSolver
+from src.logic.event import Event, parse_event
+from src.logic import Solver as MainSolver
 from django.views.decorators.csrf import csrf_exempt
-from .logic.email_sender import EmailSender
+from src.logic.email_sender import EmailSender
 import os
 
 from types import SimpleNamespace
 import multiprocessing
 import logging
-import datetime
 
-from .logic.validator import EmailValidator
+from src.logic.validator import EmailValidator
 
 with open(os.path.join(os.path.dirname(__file__), '../../.secrets/communication_key')) as f:
     SECURITY_KEY = f.read().strip()
