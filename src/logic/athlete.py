@@ -1,4 +1,4 @@
-import json
+from typing import Any, Dict
 
 
 class Athlete:
@@ -6,5 +6,5 @@ class Athlete:
         self.id = id
         self.club_id = club_id
 
-def parse_athlete(athlete_json: json) -> Athlete:
-    return Athlete(athlete_json.id, athlete_json.club_id)
+def parse_athlete(athlete_json: Dict[str, Any]) -> Athlete:
+    return Athlete(athlete_json['id'], athlete_json['club_id'])

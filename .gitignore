@@ -10,6 +10,7 @@ test.py
 src/o_startlist_creator/DEBUG
 frontend_communication
 */DEBUG
+*debug*
 
 # enviroments
 .direnv

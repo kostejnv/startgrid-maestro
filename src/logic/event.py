@@ -113,20 +113,22 @@ def parse_event(event_json:json) -> Event:
     """
     event = Event()
     try:
-        event.id = int(event_json.id)
-        event.name = event_json.name
-        event.organizator = event_json.organizator
-        event.region = event_json.region
-        event.discipline = event_json.discipline
-        if not str(event_json.capacity).isnumeric() or int(event_json.capacity) < 1:
-            return None
-        event.capacity = int(event_json.capacity)
-        event.date = event_json.date
+        event.id = int(event_json['id'])
+        event.name = event_json['name']
+        event.organizator = event_json['organizator']
+        event.region = event_json['region']
+        event.discipline = event_json['discipline']
+        if not str(event_json['capacity']).isnumeric() or int(event_json['capacity']) < 1:
+            msg = f'Invalid capacity {event_json["capacity"]}'
+            logging.getLogger(__name__).info(msg)
+            raise Exception(msg)
+        event.capacity = int(event_json['capacity'])
+        event.date = event_json['date']
         event.solved = False
         event.has_data = True
     except Exception as e:
         logging.getLogger(__name__).info(f"parsing event was unsuccessful with exception {e}")
         return None
 
-    event.categories = to_dict([parse_category(cat_json) for cat_json in event_json.categories])
+    event.categories = to_dict([parse_category(cat_json) for cat_json in event_json['categories']])
     return event
