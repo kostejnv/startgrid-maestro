@@ -3,15 +3,21 @@ from os import getenv
 import multiprocessing
 import logging
 
+
+from src.client.email import EmailClient
 from src.logic.event import Event, parse_event
-# from src.logic.email_sender import EmailSender
 from src.logic.validator import EmailValidator
 from src.logic.solver import Solver as MainSolver
+from src.settings import Settings
+from src.postman import Postman
 
 app = Flask(__name__)
-
+settings = Settings()
 logger = logging.getLogger(__name__)
 
+# mail configuration
+email_client = EmailClient(logger, app, settings)
+postman = Postman(email_client, logger)
 
 @app.route('/')
 def index():
@@ -39,8 +45,9 @@ def get_event():
         logger.debug(f"Event {event.id} successfully processed")
         return jsonify(event.export_input_data_to_dict()), 200
     except Exception as e:
-        logger.error(f'Endpoint get_event failed with {e}')
-        return jsonify({'message': str(e)}), 500
+        msg = f'Endpoint get_event failed with {e}'
+        logger.error(msg)
+        return jsonify({'message': msg}), 500
     
 
 @app.route('/solve', methods=['POST'])
@@ -66,7 +73,6 @@ def solve():
         logger.error(msg)
         return jsonify({'message': msg}), 500
     
-    
 def solve_and_send(event:Event, email:str):
     """
         function for multiprocessing
@@ -75,11 +81,10 @@ def solve_and_send(event:Event, email:str):
         event = MainSolver().solve(event)
         int_cat = event.get_not_empty_categories_with_interval_start().values()
         print(f"event {event.id} solved!\tclub: {event.organizator}\t athletes: {sum([cat.get_category_count() for cat in int_cat])}\t length: {max([cat.get_last_athlete_startime() for cat in int_cat])}")
-    #     EmailSender().send(email, event)
+        postman.deliver_startgrid(email, event)
     except Exception as e:
-        pass
-        logging.getLogger(__name__).critical(f'solve_and_send failed with {e}')
-    #     ...
+        msg = f'Endpoint solve_and_send failed: {str}'
+        logger.error(msg)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)

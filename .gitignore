@@ -19,3 +19,6 @@ frontend_communication
 #logging
 staging.log
 
+# enviroment variables
+.env
+

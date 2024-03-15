@@ -1,2 +1,3 @@
 flask
+Flask-Mail
 minizinc==0.7.0
