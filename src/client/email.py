@@ -16,8 +16,8 @@ class EmailClient:
         app.config['MAIL_PORT'] = settings.MAIL_PORT
         app.config['MAIL_USERNAME'] = settings.MAIL_USERNAME
         app.config['MAIL_PASSWORD'] = settings.MAIL_PASSWORD
-        app.config['MAIL_USE_TLS'] = False
-        app.config['MAIL_USE_SSL'] = True
+        app.config['MAIL_USE_TLS'] = True
+        app.config['MAIL_USE_SSL'] = False
         
         self.mail = Mail()
         self.mail.init_app(app)
