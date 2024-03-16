@@ -3,7 +3,7 @@ FROM minizinc/minizinc:latest
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3.11 \
+    python3 \
     python3-pip \
     && \
     apt-get clean && \
