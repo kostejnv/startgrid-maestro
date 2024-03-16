@@ -1,4 +1,4 @@
-import json
+from typing import Dict, Any
 from ..logic.athlete import Athlete, parse_athlete
 
 class Category:
@@ -32,22 +32,22 @@ class Category:
         else:
             return self.final_start + (self.get_category_count() - 1) * self.final_interval
 
-def parse_category(cat_json:json) -> Category:
-    cat = Category(cat_json.name)
-    cat.athletes = [parse_athlete(athlete_json) for athlete_json in cat_json.athletes]
-    cat.min_interval = int(cat_json.min_interval)
-    cat.vacants_count = int(cat_json.vacants_count)
-    cat.categories_w_same_course = [course for course in cat_json.categories_w_same_course]
-    cat.first_control = cat_json.first_control
-    cat.course = cat_json.course
-    cat.near_category = [cat for cat in cat_json.near_category]
-    cat.far_category = [ cat for cat in cat_json.far_category]
-    cat.final_interval = cat_json.final_interval
-    cat.final_start = cat_json.final_start
-    cat.has_interval_start = cat_json.has_interval_start
-    cat.start = cat_json.start
-    if int(cat_json.athletes_count) > len(cat.athletes):
-        add_athletes(cat, cat_json.athletes_count - len(cat.athletes))
+def parse_category(cat_dict:Dict[str,Any]) -> Category:
+    cat = Category(cat_dict['name'])
+    cat.athletes = [parse_athlete(athlete_json) for athlete_json in cat_dict['athletes']]
+    cat.min_interval = int(cat_dict['min_interval'])
+    cat.vacants_count = int(cat_dict['vacants_count'])
+    cat.categories_w_same_course = [course for course in cat_dict['categories_w_same_course']]
+    cat.first_control = cat_dict['first_control']
+    cat.course = cat_dict['course']
+    cat.near_category = [cat for cat in cat_dict['near_category']]
+    cat.far_category = [ cat for cat in cat_dict['far_category']]
+    cat.final_interval = cat_dict['final_interval']
+    cat.final_start = cat_dict['final_start']
+    cat.has_interval_start = cat_dict['has_interval_start']
+    cat.start = cat_dict['start']
+    if int(cat_dict['athletes_count']) > len(cat.athletes):
+        add_athletes(cat, cat_dict['athletes_count'] - len(cat.athletes))
     return cat
 
 def add_athletes(cat:Category, count:int) -> None:

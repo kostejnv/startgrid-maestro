@@ -1,17 +1,10 @@
 from asyncio.log import logger
 from .event import Event
-from ..settings import EMAIL_HOST_USER
+from src.o_startlist_creator.settings import EMAIL_HOST_USER
 from django.core.mail import EmailMessage
+from src.static_paths import STATIC_PATH
 import logging
 import datetime
-
-DEFAULT_MSG = """Hezký den,
-váš startovní rošt byl vytvořen. Naleznete ho v příloze.
-
-Pokud máte jakékoli připomínky nebo nápady na vylepšení, stačí odpovědět na tento email. Budu rád za každou zpětnou vazbu.
-Víťa Koštejn
-"""
-DEFAULT_SUBJECT = 'Startovní rošt vytvořen'
 
 class EmailSender:
     def __init__(self) -> None:

@@ -1,6 +1,6 @@
 import re
 
-# from o_startlist_creator.logic.category import Category
+# from src.logic.category import Category
 
 class CategoryPrioritizer:
     def __init__(self, categories):
