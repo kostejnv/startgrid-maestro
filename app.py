@@ -1,5 +1,4 @@
 from flask import request, jsonify, Flask
-from os import getenv
 import multiprocessing
 import logging
 
@@ -10,8 +9,10 @@ from src.logic.validator import EmailValidator
 from src.logic.solver import Solver as MainSolver
 from src.settings import Settings
 from src.postman import Postman
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 settings = Settings()
 logger = logging.getLogger(__name__)
 
