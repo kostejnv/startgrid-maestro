@@ -1,3 +1,4 @@
 flask
 Flask-Mail
+flask-cors
 minizinc==0.7.0
