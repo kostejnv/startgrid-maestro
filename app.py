@@ -14,6 +14,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 settings = Settings()
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # mail configuration
@@ -32,7 +33,7 @@ def get_event():
         courses_str = data.get('courses_str', None)
         event = Event()
         
-        logger.debug(f"Processing oris_id: {oris_id}")
+        logger.info(f"Processing oris_id: {oris_id}")
     
         if not event.add_dat_from_oris(oris_id):
             msg = f'Oris ID {oris_id} not found'
@@ -43,7 +44,7 @@ def get_event():
             logger.error(msg)
             return jsonify({'message': msg}), 502
     
-        logger.debug(f"Event {event.id} successfully processed")
+        logger.info(f"Event {event.id} successfully processed")
         return jsonify(event.export_input_data_to_dict()), 200
     except Exception as e:
         msg = f'Endpoint get_event failed with {e}'
@@ -61,6 +62,7 @@ def solve():
             msg = f'Invalid email {email}'
             logger.error(msg)
             return jsonify({'message': msg}), 502
+        logger.info(f"Processing event {json_event['id']} for {email}")
         event = parse_event(json_event)
         if not event:
             msg = f'Invalid event format'
@@ -79,12 +81,18 @@ def solve_and_send(event:Event, email:str):
         function for multiprocessing
     """
     try:
+        logger.info(f"Creating startgrid for event {event.id}")
         event = MainSolver().solve(event)
         int_cat = event.get_not_empty_categories_with_interval_start().values()
-        print(f"event {event.id} solved!\tclub: {event.organizator}\t athletes: {sum([cat.get_category_count() for cat in int_cat])}\t length: {max([cat.get_last_athlete_startime() for cat in int_cat])}")
+        logger.info(f"event {event.id} solved!\tclub: {event.organizator}\t athletes: {sum([cat.get_category_count() for cat in int_cat])}\t length: {max([cat.get_last_athlete_startime() for cat in int_cat])}")
         postman.deliver_startgrid(email, event)
     except Exception as e:
-        msg = f'Endpoint solve_and_send failed: {str}'
+        msg = f'Endpoint solve_and_send failed: {str(e)}'
+        postman.send_email(
+                    receiver=settings.MAIL_USERNAME,
+                    subject='Error in startgrid delivery',
+                    message=f'Error in startgrid delivery for event {event.id} to {email}: {str(e)} \n\n {event.export_input_data_to_dict()}'
+                )
         logger.error(msg)
 
 if __name__ == '__main__':

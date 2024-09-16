@@ -11,9 +11,24 @@ class Postman:
         self.email_client = email_client
         self.logger = logger
         
+    def send_email(self, receiver: str, subject: str, message: str) -> None:
+        try:
+            self.logger.info(f'Sending email to {receiver}')
+            email = Email(
+                reciever=receiver,
+                subject=subject,
+                message=message
+            )
+            self.email_client.send(email)
+            self.logger.info('Email sent')
+        except Exception as e:
+            msg = f'Postman.send_email failed: {str(e)}'
+            self.logger.error(msg)
+            raise Exception(msg) from e
+        
     def deliver_startgrid(self, receiver: str, event:Event) -> None:
         try:
-            self.logger.debug(f'Delivering startgrid to {receiver}')
+            self.logger.info(f'Delivering startgrid to {receiver}')
             startgrid = event.export_final_data_to_csv()
             with open(StaticPaths.POSTMAN_STARTGRID_MSG, 'r', encoding='utf-8') as file:
                 msg = file.read()
@@ -31,7 +46,7 @@ class Postman:
                 )
             )
             self.email_client.send(email)
-            self.logger.debug('Startgrid delivered')
+            self.logger.info('Startgrid delivered')
         except Exception as e:
             msg = f'Postman.deliver_startgrid failed: {str(e)}'
             self.logger.error(msg)
