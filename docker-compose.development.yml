@@ -1,0 +1,16 @@
+version: '3.4'
+
+x-maestro: &maestro-app
+  build: .
+
+services:
+    maestro:
+        <<: *maestro-app
+        container_name: maestro
+        restart: always
+        env_file:
+            - .env
+        command: >
+            flask run --host 0.0.0.0 --port 5000
+        ports:
+            - 5001:5000
