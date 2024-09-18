@@ -1,5 +1,5 @@
 from asyncio.log import logger
-from .event import Event
+from ..entities.event import Event
 from src.o_startlist_creator.settings import EMAIL_HOST_USER
 from django.core.mail import EmailMessage
 from src.static_paths import STATIC_PATH

@@ -4,7 +4,7 @@ import logging
 
 
 from src.client.email import EmailClient
-from src.logic.event import Event, parse_event
+from src.entities.event import Event, parse_event
 from src.logic.validator import EmailValidator
 from src.logic.solver import Solver as MainSolver
 from src.settings import Settings

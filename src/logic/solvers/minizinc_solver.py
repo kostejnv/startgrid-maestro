@@ -1,4 +1,4 @@
-from ..event import Event
+from ...entities.event import Event
 
 from ..solvers.solver import Solver
 from minizinc import Instance, Model

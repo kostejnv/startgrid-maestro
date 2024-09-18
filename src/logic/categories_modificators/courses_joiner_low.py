@@ -1,4 +1,4 @@
-from ..category import Category
+from ...entities.category import Category
 from ..categories_modificators.utils import to_dict, set_all_intervals_to_power_2
 from copy import deepcopy
 

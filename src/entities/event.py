@@ -3,15 +3,15 @@
 import csv
 import json
 import string
-from .oris_import import *
+from ..logic.oris_import import *
 from .category import Category, parse_category
 
-from .input_manager.classes_manager import Classes_manager
-from .input_manager.entries_manager import Entries_manager
-from .input_manager.event_manager import Event_manager
-from .input_manager.constraints_manager import ConstrainsManager
-from .input_manager.courses_manager import Courses_manager
-from .categories_modificators.utils import to_dict
+from ..logic.input_manager.classes_manager import Classes_manager
+from ..logic.input_manager.entries_manager import Entries_manager
+from ..logic.input_manager.event_manager import Event_manager
+from ..logic.input_manager.constraints_manager import ConstrainsManager
+from ..logic.input_manager.courses_manager import Courses_manager
+from ..logic.categories_modificators.utils import to_dict
 
 import logging
 

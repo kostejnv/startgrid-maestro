@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from ..logic.athlete import Athlete, parse_athlete
+from .athlete import Athlete, parse_athlete
 
 class Category:
     def __init__(self, name):

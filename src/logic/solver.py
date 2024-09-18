@@ -1,4 +1,4 @@
-from .event import Event
+from ..entities.event import Event
 from .validator import CoursesValidator
 from .solvers.minizinc_solver import Minizinc
 import datetime
