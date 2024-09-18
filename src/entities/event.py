@@ -18,7 +18,7 @@ import logging
 
 
 class Event:
-    def __init__(self, oris_client: OrisClient = OrisClient()) -> None:
+    def __init__(self) -> None:
         self.id = None
         self.name = None
         self.organizator = None
@@ -29,15 +29,15 @@ class Event:
         self.categories = {}
         self.solved = False
         self.has_data = False
-        self.oris_client = oris_client
 
     def add_dat_from_oris(self, oris_id:int) -> bool:
         """
         return if the operation was successful
         """
         try:
-            event_json = self.oris_client.download_classes(oris_id)
-            entries_json = self.oris_client.download_entries(oris_id)
+            oris = OrisClient()
+            event_json = oris.download_classes(oris_id)
+            entries_json = oris.download_entries(oris_id)
         except Exception as e:
             logging.getLogger(__name__).info(f"oris downloads was unsuccessful with exception {e}")
             return False
