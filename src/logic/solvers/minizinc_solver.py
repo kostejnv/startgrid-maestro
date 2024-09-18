@@ -1,8 +1,7 @@
 from src.entities.event import Event
 
 from src.logic.solvers.solver import Solver
-from minizinc import Instance, Model
-from minizinc import Solver as MZNSolver
+from src.client.minizinc_client import MinizincClient
 from copy import deepcopy
 from src.logic.categories_modificators.courses_joiner_low import CoursesJoinerLow
 
@@ -16,35 +15,28 @@ from src.logic.utils.category_prioritizer import CategoryPrioritizer
 
 
 class Minizinc(Solver):
+    
     def __init__(self, timeout):
-        self.timeout = timeout
+        self.minizinc_client = MinizincClient(timeout)
+        self.phase = 0
         pass
     
     def solve(self, event):
-        gecode = MZNSolver.lookup("gecode")
-        
         self.phase = 1 # PHASE 1: FIND THE SORTEST SCHEDULE
-        instance = self.__get_instance(deepcopy(event), gecode)
-        result = instance.solve(timeout=self.timeout)
-        _, schedule_length = self.__convert_result(result, event)
+        result = self.minizinc_client.solve(self._generate_str_model(event), self._generate_instance(event))
+        _, schedule_length = self._convert_result(result, event)
         self.last_starttime = schedule_length - 1
         
         self.phase = 2 # PHASE 2: FIND BETTER ORDER OF CATEGORIES
-        instance = self.__get_instance(deepcopy(event), gecode)
-        result = instance.solve(timeout=self.timeout)
-        solved_categories, schedule_length = self.__convert_result(result, event)
+        result = self.minizinc_client.solve(self._generate_str_model(event), self._generate_instance(event))
+        solved_categories, schedule_length = self._convert_result(result, event)
         
         return solved_categories, schedule_length
     
     def get_name(self):
         return 'ConsProg'
     
-    def __get_instance(self, event, solver):
-        model = self.__generate_model(event)
-        instance = self.__generate_instance(model, solver, event)
-        return instance
-    
-    def __convert_result(self, result, event):
+    def _convert_result(self, result, event):
         if result:
             solved_cats = event.get_not_empty_categories_with_interval_start()
             for idx, cat in enumerate(solved_cats.values()):
@@ -55,14 +47,7 @@ class Minizinc(Solver):
             solved_cats, schedule_length = self.__get_upperBoundSolution(event)
         return solved_cats, schedule_length
     
-    def __generate_model(self, event):
-        model = Model()
-        model_definition = self.generate_str_model(event)
-        
-        model.add_string(model_definition)
-        return model
-    
-    def generate_str_model(self, event: Event):
+    def _generate_str_model(self, event: Event):
         return f'''
                 % minizinc definition of model of PSR solver
                 %includes
@@ -139,8 +124,8 @@ class Minizinc(Solver):
                 output ["Cmax: \(cmax)\\n"] ++["objective: \(objective)\\n"] ++["schedule_earliness: \(schedule_earliness)\\n"];
             '''
     
-    def __generate_instance(self, model, solver, event):
-        instance = Instance(solver, model)
+    def _generate_instance(self, event):
+        instance = {}
         
         # add variables
         cats = event.get_not_empty_categories_with_interval_start()
