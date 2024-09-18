@@ -1,8 +1,7 @@
-from src.logic.solvers.solver import Solver
-from src.logic.solvers.solver_utils import set_all_intervals_to_power_2
+from src.solving.solvers.solver import Solver
+from src.solving.solvers.solver_utils import set_all_intervals_to_power_2
 import copy
 from math import log2, ceil
-from src.logic.categories_modificators.courses_joiner_low import CoursesJoinerLow
 
 
 class BestIntervalChooser(Solver):
@@ -77,7 +76,7 @@ class BestIntervalChooser(Solver):
                 self.__original_vacants[cat.name] = cat.vacants_count
                 cat.vacants_count += (cat.get_category_count() -1) * ratios[cat.name] + 1 - cat.get_category_count()
             else:
-                raise f"Internal error: cat {cat.name} not in ratios"
+                raise ValueError(f"Internal error: cat {cat.name} not in ratios")
         return cats
 
     def __return_cats_back_acc_to_ratio(self, solved_cats, ratios):
@@ -92,5 +91,5 @@ class BestIntervalChooser(Solver):
                 cat.final_interval = cat.final_interval * ratios[cat.name]
                 cat.vacants_count = self.__original_vacants[cat.name]
             else:
-                raise f"Internal error: cat {cat.name} not in ratios"
+                raise ValueError(f"Internal error: cat {cat.name} not in ratios")
         return solved_cats

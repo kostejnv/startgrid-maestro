@@ -1,5 +1,4 @@
-from src.logic.solvers.solver import Solver
-from src.logic.categories_modificators.courses_joiner_low import CoursesJoinerLow
+from src.solving.solvers.solver import Solver
 
 
 def first_possible_minute(cat, schedule, capacity):
@@ -8,11 +7,9 @@ def first_possible_minute(cat, schedule, capacity):
             return minute
 
 
-
-class GreedySolver(Solver):
+class GreedyLongFirstSolver(Solver):
     def __init__(self, joiner):
         self.joiner = joiner
-        pass
 
     def solve(self, event):
         categories = event.get_not_empty_categories_with_interval_start()
@@ -23,13 +20,14 @@ class GreedySolver(Solver):
         res = [[] for _ in range(opt_upper_bound)]
         for cat in categories.values():
             cat.final_interval = interval
-        for cat in categories.values():
+        sorted_cats = sorted(categories.values(), key=lambda cat: cat.get_category_count(), reverse=True)
+        for cat in sorted_cats:
             cat.final_start = first_possible_minute(cat, res, event.capacity)
             for j in range(cat.get_category_count()):
                 idx = cat.final_start + j * interval
                 res[idx].append(cat.first_control)
-        c_max = max([i+1 for i in range(len(res)) if res[i]])
+        c_max = max([i + 1 for i in range(len(res)) if res[i]])
         return self.joiner.disjoin(list(categories.values())), c_max
 
     def get_name(self):
-        return 'GenGreedy'
+        return 'GreedyLength'

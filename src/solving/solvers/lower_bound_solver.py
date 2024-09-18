@@ -1,4 +1,4 @@
-from src.logic.solvers.solver import Solver
+from src.solving.solvers.solver import Solver
 
 
 class LowerBoundSolver(Solver):

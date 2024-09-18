@@ -1,12 +1,12 @@
 from src.entities.category import Category
-from src.logic.categories_modificators.utils import to_dict, set_all_intervals_to_power_2
+from src.solving.categories_modificators.utils import to_dict, set_all_intervals_to_power_2
 from copy import deepcopy
 
 
 class CoursesJoinerHigh:
     def __init__(self):
         self.was_joined = False
-        self.original_cats = None
+        self.original_cats = []
         self.cats_of_course = {}
 
     def get_name(self):
@@ -54,7 +54,7 @@ class CoursesJoinerHigh:
             if org_cat.name in new_cats_dict:
                 self.__transfer_data_to_single_original_cat(org_cat, new_cats_dict[org_cat.name])
             else:
-                raise f"category {org_cat.name} is not between solved_categories"
+                raise ValueError(f"category {org_cat.name} is not between solved_categories")
 
     def __save_cats_of_courses(self, course_name: str, sorted_cats: list) -> None:
         self.cats_of_course[course_name] = sorted_cats

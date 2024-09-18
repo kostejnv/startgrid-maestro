@@ -1,5 +1,4 @@
-from src.logic.categories_modificators.courses_joiner_low import CoursesJoinerLow
-from src.logic.solvers.solver import Solver
+from src.solving.solvers.solver import Solver
 
 
 def first_possible_minute(cat, schedule, capacity):

@@ -1,20 +1,20 @@
 from src.entities.event import Event
 
-from src.logic.solvers.solver import Solver
+from src.solving.solvers.solver import Solver
 from src.client.minizinc_client import MinizincClient
 from copy import deepcopy
-from src.logic.categories_modificators.courses_joiner_low import CoursesJoinerLow
+from src.solving.categories_modificators.courses_joiner_low import CoursesJoinerLow
 
-from src.logic.solvers.power_2_more_capacity_wrapper import Power2SolverMoreCapacityWrapper
-from src.logic.solvers.best_interval_chooser import BestIntervalChooser
-from src.logic.solvers.power_2_algorithm import Power2Solver
-from src.logic.solvers.greedy_long_at_first_solver import GreedyLongFirstSolver
-from src.logic.solvers.greedy_algorithm_be_resources import GreedyByResouresSolver
-from src.logic.solvers.lower_bound_solver import LowerBoundSolver
-from src.logic.utils.category_prioritizer import CategoryPrioritizer
+from src.solving.solvers.power_2_more_capacity_wrapper import Power2SolverMoreCapacityWrapper
+from src.solving.solvers.best_interval_chooser import BestIntervalChooser
+from src.solving.solvers.power_2_algorithm import Power2Solver
+from src.solving.solvers.greedy_long_at_first_solver import GreedyLongFirstSolver
+from src.solving.solvers.greedy_algorithm_be_resources import GreedyByResouresSolver
+from src.solving.solvers.lower_bound_solver import LowerBoundSolver
+from src.solving.category_prioritizer import CategoryPrioritizer
 
 
-class Minizinc(Solver):
+class MinizincSolver(Solver):
     
     def __init__(self, timeout):
         self.minizinc_client = MinizincClient(timeout)
@@ -44,7 +44,7 @@ class Minizinc(Solver):
                 cat.final_interval = result["Gs"][idx]
             schedule_length = result["cmax"] + 1
         else:
-            solved_cats, schedule_length = self.__get_upperBoundSolution(event)
+            solved_cats, schedule_length = self._get_upperBoundSolution(event)
         return solved_cats, schedule_length
     
     def _generate_str_model(self, event: Event):
@@ -58,7 +58,7 @@ class Minizinc(Solver):
                 % data
                 enum Categories = {self.__generate_categories(event)};
 
-                array[Categories] of int: idxs = 1src.logic.length(Categories); % for ordering the categories
+                array[Categories] of int: idxs = 1src.solving.length(Categories); % for ordering the categories
                 array[Categories] of int: gs; % minimal periods
                 array[Categories] of int: ps; % number of athletes
                 array[Categories] of string: cs; % courses of categories
@@ -70,9 +70,9 @@ class Minizinc(Solver):
                 int: maxG = (upperBoundLength+1) div (max(ps));
 
                 % variables
-                array[Categories] of var 0src.logic.upperBoundLength: Ss; %starts
-                array[Categories] of var 0src.logic.upperBoundLength: Gs; %periods
-                var lowerBoundLengthsrc.logic.upperBoundLength: cmax; %end of schedule
+                array[Categories] of var 0src.solving.upperBoundLength: Ss; %starts
+                array[Categories] of var 0src.solving.upperBoundLength: Gs; %periods
+                var lowerBoundLengthsrc.solving.upperBoundLength: cmax; %end of schedule
                 var float: objective;
                 var float: schedule_earliness;
 
@@ -133,8 +133,8 @@ class Minizinc(Solver):
         instance["ps"] = [cat.get_category_count() for cat in cats.values()]
         instance["cs"] = [cat.course for cat in cats.values()]
         instance["priority"] = CategoryPrioritizer(cats).get_priority()
-        instance["upperBoundLength"] = self.__get_upperBound(deepcopy(event)) - 1 if self.phase == 1 else self.last_starttime
-        instance["lowerBoundLength"] = self.__get_lowerBound(deepcopy(event)) - 1
+        instance["upperBoundLength"] = self._get_upperBound(deepcopy(event))[1] - 1 if self.phase == 1 else self.last_starttime
+        instance["lowerBoundLength"] = self._get_lowerBound(deepcopy(event)) - 1
         instance['capacity'] = event.capacity
         
         return instance
@@ -143,9 +143,9 @@ class Minizinc(Solver):
         cats = event.get_not_empty_categories_with_interval_start()
         return f'''
             constraint global_cardinality_low_up_closed({self.__generate_all_athletes_starts_query(cats.values())},
-                                            [i| i in 0src.logic.upperBoundLength],
-                                            [0| i in 0src.logic.upperBoundLength],
-                                            [capacity|i in 0src.logic.upperBoundLength]);
+                                            [i| i in 0src.solving.upperBoundLength],
+                                            [0| i in 0src.solving.upperBoundLength],
+                                            [capacity|i in 0src.solving.upperBoundLength]);
         '''
     
     def __generate_resources_constraint(self, event):
@@ -153,13 +153,16 @@ class Minizinc(Solver):
         resources = set([cat.first_control for cat in cats.values()])
         return '\n\n'.join([self.__generate_constraint_for_given_resources(res, cats.values()) for res in resources])
     
-    def __get_upperBound(self, event):
-        _, power2_result = Power2SolverMoreCapacityWrapper(Power2Solver(CoursesJoinerLow(), improved=True), CoursesJoinerLow()).solve(deepcopy(event))
-        _, greedy_long_result = BestIntervalChooser(GreedyLongFirstSolver(CoursesJoinerLow()), CoursesJoinerLow()).solve(deepcopy(event))
-        _, greedy_resources_result = BestIntervalChooser(GreedyByResouresSolver(CoursesJoinerLow()), CoursesJoinerLow()).solve(deepcopy(event))
-        return min([power2_result, greedy_long_result, greedy_resources_result])
+    def _get_upperBoundSolution(self, event):
+        cats1, result1 = Power2SolverMoreCapacityWrapper(Power2Solver(CoursesJoinerLow(), improved=True), CoursesJoinerLow()).solve(deepcopy(event))
+        cats2, result2 = BestIntervalChooser(GreedyLongFirstSolver(CoursesJoinerLow()), CoursesJoinerLow()).solve(deepcopy(event))
+        cats3, result3 = BestIntervalChooser(GreedyByResouresSolver(CoursesJoinerLow()), CoursesJoinerLow()).solve(deepcopy(event))
+        return min((result1, cats1), (result2, cats2), (result3, cats3), key=lambda x: x[0])
     
-    def __get_lowerBound(self, event):
+    def _get_upperBound(self, event):
+        return self._get_upperBoundSolution(event)[0]
+    
+    def _get_lowerBound(self, event):
         _, lower_bound = LowerBoundSolver().solve(deepcopy(event))
         return lower_bound
     
@@ -179,7 +182,7 @@ class Minizinc(Solver):
     
     def __generate_category_all_starts_query(self, cat):
         cat_name = cat.name.replace("-", "")
-        return f"[Ss[{cat_name}] + Gs[{cat_name}]*t| t in 0src.logic.ps[{cat_name}]-1]"
+        return f"[Ss[{cat_name}] + Gs[{cat_name}]*t| t in 0src.solving.ps[{cat_name}]-1]"
     
     def __generate_categories(self, event):
         cats = event.get_not_empty_categories_with_interval_start()
@@ -188,24 +191,3 @@ class Minizinc(Solver):
             cat_str += cat.name.replace("-", "")
             cat_str += ", " if idx < len(cats) - 1 else ""
         return cat_str + '}'
-    
-    def __get_upperBoundSolution(self, event: Event) -> tuple:
-        cats, len = Power2SolverMoreCapacityWrapper(
-            Power2Solver(CoursesJoinerLow(), improved=True),
-            CoursesJoinerLow()
-        ).solve(deepcopy(event))
-        greedy_long_cats, greedy_long_len = BestIntervalChooser(
-            GreedyLongFirstSolver(CoursesJoinerLow()),
-            CoursesJoinerLow()
-        ).solve(deepcopy(event))
-        if greedy_long_len < len:
-            cats = greedy_long_cats
-            len = greedy_long_len
-        greedy_resources_cats, greedy_resources_len = BestIntervalChooser(
-            GreedyByResouresSolver(CoursesJoinerLow()),
-            CoursesJoinerLow()
-        ).solve(deepcopy(event))
-        if greedy_resources_len < len:
-            len = greedy_resources_len
-            cats = greedy_resources_cats
-        return cats, len

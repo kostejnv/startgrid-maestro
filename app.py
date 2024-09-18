@@ -5,8 +5,8 @@ import logging
 
 from src.client.email import EmailClient
 from src.entities.event import Event, parse_event
-from src.logic.validator import EmailValidator
-from src.logic.solver import Solver as MainSolver
+from src.validation.validator import EmailValidator
+from src.solving.main_solver import MainSolver
 from src.settings import Settings
 from src.email_managing.postman import Postman
 from flask_cors import CORS
