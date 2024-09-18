@@ -1,7 +1,7 @@
 from src.client.email import EmailClient, Email, Attachment
 from logging import Logger
 from src.static_paths import StaticPaths
-from src.logic.event import Event
+from src.entities.event import Event
 
 class Postman:
     email_client: EmailClient

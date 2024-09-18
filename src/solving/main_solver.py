@@ -1,20 +1,20 @@
-from .event import Event
-from .validator import CoursesValidator
-from .solvers.minizinc_solver import Minizinc
+from src.entities.event import Event
+from src.validation.validator import CoursesValidator
+from src.solving.solvers.minizinc_solver import MinizincSolver
 import datetime
 
 SOLVER_TIMEOUT = 300
 
-class Solver:
+class MainSolver:
     def __init__(self) -> None:
         pass
 
     def solve(self, event:Event) -> Event:
-        solver = Minizinc(timeout=datetime.timedelta(seconds=SOLVER_TIMEOUT))
+        solver = MinizincSolver(timeout=datetime.timedelta(seconds=SOLVER_TIMEOUT))
         individual_cats, schedule_length = solver.solve(event)
         event = self.__merge_solved_cats_to_event(individual_cats, event)
         if not CoursesValidator(event, schedule_length).validate_schedule():
-            raise "INTERNAL ERROR: Returned scheduled is not correct"
+            raise ValueError("INTERNAL ERROR: Returned scheduled is not correct")
         event.solved = True
         return event
 

@@ -4,17 +4,17 @@ import logging
 
 
 from src.client.email import EmailClient
-from src.logic.event import Event, parse_event
-from src.logic.validator import EmailValidator
-from src.logic.solver import Solver as MainSolver
+from src.entities.event import Event, parse_event
+from src.validation.validator import EmailValidator
+from src.solving.main_solver import MainSolver
 from src.settings import Settings
-from src.postman import Postman
+from src.email_managing.postman import Postman
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 settings = Settings()
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 # mail configuration

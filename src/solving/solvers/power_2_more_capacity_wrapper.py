@@ -1,7 +1,6 @@
 import copy
 
-from ..solvers.solver import Solver
-from ..categories_modificators.courses_joiner_low import CoursesJoinerLow
+from src.solving.solvers.solver import Solver
 import copy
 import random
 

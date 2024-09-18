@@ -3,15 +3,16 @@
 import csv
 import json
 import string
-from .oris_import import *
-from .category import Category, parse_category
+from src.client.oris import *
+from src.entities.category import Category, parse_category
 
-from .input_manager.classes_manager import Classes_manager
-from .input_manager.entries_manager import Entries_manager
-from .input_manager.event_manager import Event_manager
-from .input_manager.constraints_manager import ConstrainsManager
-from .input_manager.courses_manager import Courses_manager
-from .categories_modificators.utils import to_dict
+from src.parsing.classes_manager import Classes_manager
+from src.parsing.entries_manager import Entries_manager
+from src.parsing.event_manager import Event_manager
+from src.parsing.constraints_manager import ConstrainsManager
+from src.parsing.courses_manager import Courses_manager
+from src.solving.categories_modificators.utils import to_dict
+from src.client.oris import OrisClient
 
 import logging
 
@@ -34,8 +35,9 @@ class Event:
         return if the operation was successful
         """
         try:
-            event_json = download_classes(oris_id)
-            entries_json = download_entries(oris_id)
+            oris = OrisClient()
+            event_json = oris.download_classes(oris_id)
+            entries_json = oris.download_entries(oris_id)
         except Exception as e:
             logging.getLogger(__name__).info(f"oris downloads was unsuccessful with exception {e}")
             return False
@@ -50,7 +52,7 @@ class Event:
             return True
         return False
 
-    def DEBUG_add_dat_from_oris(self, event_json:json, entries_json:json) -> None:
+    def DEBUG_add_dat_from_oris(self, event_json:dict, entries_json:dict) -> None:
         self.__add_general_info(event_json)
         self.__add_classes_info(event_json)
         self.__add_athletes(entries_json)
@@ -75,16 +77,16 @@ class Event:
             return False
         return True
 
-    def export_input_data_to_dict(self) -> json:
+    def export_input_data_to_dict(self) -> dict:
         if not self.has_data:
-            raise "ERROR: No data imported"
+            raise ValueError("ERROR: No data imported")
         event_dict = self.__dict__
         event_dict['categories'] = [cat.to_dict() for cat in event_dict['categories'].values()]
         return event_dict
     
-    def export_final_data_to_csv(self) -> csv:
+    def export_final_data_to_csv(self) -> str:
         if not self.solved:
-            raise "ERROR: Event has not been solved yet"
+            raise ValueError("ERROR: Event has not been solved yet")
         data = ['Kategorie, START, INTERVAL, Pocet zavodniku, Int. start, Min. interval, Pocet vakantu, Trat, 1. kontrola'] + [
             f'{cat.name}, {cat.final_start}, {cat.final_interval}, {cat.get_category_count()}, {cat.has_interval_start}, {cat.min_interval}, {cat.vacants_count}, {cat.course}, {cat.first_control}' for cat in self.categories.values()]
         return '\n'.join(data)
@@ -98,16 +100,16 @@ class Event:
     #___________________________________________________
     # private methods
 
-    def __add_general_info(self, event_json:json) -> None:
+    def __add_general_info(self, event_json:dict) -> None:
         Event_manager().add_info(self,event_json)
 
-    def __add_classes_info(self, event_json:json) -> None:
+    def __add_classes_info(self, event_json:dict) -> None:
         self.categories = Classes_manager().get_categories(event_json)
 
-    def __add_athletes(self, entries_json:json) -> None:
+    def __add_athletes(self, entries_json:dict) -> None:
         Entries_manager().add_athletes_info_to_cats(self, entries_json)
 
-def parse_event(event_json:json) -> Event:
+def parse_event(event_json:dict) -> Event|None:
     """
     return None if parsing was unsuccessful 
     """

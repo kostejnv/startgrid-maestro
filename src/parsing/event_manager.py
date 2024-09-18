@@ -5,7 +5,7 @@ class Event_manager:
     def __init__(self):
         pass
 
-    def add_info(self, event, event_json:json) -> None: # get general information about event
+    def add_info(self, event, event_json:dict) -> None: # get general information about event
         event_json = event_json["Data"]
         event.name = event_json["Name"]
         event.id = event_json["ID"]
