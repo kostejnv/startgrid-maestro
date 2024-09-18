@@ -1,5 +1,5 @@
-from ...entities.category import Category
-from ...entities.event import Event
+from src.entities.category import Category
+from src.entities.event import Event
 from math import ceil,log2
 
 def set_all_intervals_same(cats):

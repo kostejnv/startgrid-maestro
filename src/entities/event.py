@@ -3,21 +3,22 @@
 import csv
 import json
 import string
-from ..logic.oris_import import *
-from .category import Category, parse_category
+from src.client.oris import *
+from src.entities.category import Category, parse_category
 
-from ..logic.input_manager.classes_manager import Classes_manager
-from ..logic.input_manager.entries_manager import Entries_manager
-from ..logic.input_manager.event_manager import Event_manager
-from ..logic.input_manager.constraints_manager import ConstrainsManager
-from ..logic.input_manager.courses_manager import Courses_manager
-from ..logic.categories_modificators.utils import to_dict
+from src.logic.input_manager.classes_manager import Classes_manager
+from src.logic.input_manager.entries_manager import Entries_manager
+from src.logic.input_manager.event_manager import Event_manager
+from src.logic.input_manager.constraints_manager import ConstrainsManager
+from src.logic.input_manager.courses_manager import Courses_manager
+from src.logic.categories_modificators.utils import to_dict
+from src.client.oris import OrisClient
 
 import logging
 
 
 class Event:
-    def __init__(self) -> None:
+    def __init__(self, oris_client: OrisClient = OrisClient()) -> None:
         self.id = None
         self.name = None
         self.organizator = None
@@ -28,14 +29,15 @@ class Event:
         self.categories = {}
         self.solved = False
         self.has_data = False
+        self.oris_client = oris_client
 
     def add_dat_from_oris(self, oris_id:int) -> bool:
         """
         return if the operation was successful
         """
         try:
-            event_json = download_classes(oris_id)
-            entries_json = download_entries(oris_id)
+            event_json = self.oris_client.download_classes(oris_id)
+            entries_json = self.oris_client.download_entries(oris_id)
         except Exception as e:
             logging.getLogger(__name__).info(f"oris downloads was unsuccessful with exception {e}")
             return False

@@ -1,4 +1,4 @@
-from ...entities.athlete import Athlete
+from src.entities.athlete import Athlete
 import json
 
 class Entries_manager:

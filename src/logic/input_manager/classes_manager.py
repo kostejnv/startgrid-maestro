@@ -1,5 +1,5 @@
 import json
-from ...entities.category import Category
+from src.entities.category import Category
 
 
 class Classes_manager:

@@ -1,5 +1,5 @@
-from ...entities.category import Category
-from ..categories_modificators.utils import to_dict, set_all_intervals_to_power_2
+from src.entities.category import Category
+from src.logic.categories_modificators.utils import to_dict, set_all_intervals_to_power_2
 from copy import deepcopy
 
 

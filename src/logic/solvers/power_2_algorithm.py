@@ -1,6 +1,6 @@
-from ..categories_modificators.courses_joiner_low import CoursesJoinerLow
-from ..solvers.solver import Solver
-from ..solvers.solver_utils import set_all_intervals_to_power_2
+from src.logic.categories_modificators.courses_joiner_low import CoursesJoinerLow
+from src.logic.solvers.solver import Solver
+from src.logic.solvers.solver_utils import set_all_intervals_to_power_2
 from math import floor, log2
 
 

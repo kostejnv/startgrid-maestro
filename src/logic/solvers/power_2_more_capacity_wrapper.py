@@ -1,7 +1,7 @@
 import copy
 
-from ..solvers.solver import Solver
-from ..categories_modificators.courses_joiner_low import CoursesJoinerLow
+from src.logic.solvers.solver import Solver
+from src.logic.categories_modificators.courses_joiner_low import CoursesJoinerLow
 import copy
 import random
 

@@ -1,6 +1,6 @@
-from ..entities.event import Event
-from .validator import CoursesValidator
-from .solvers.minizinc_solver import Minizinc
+from src.entities.event import Event
+from src.logic.validator import CoursesValidator
+from src.logic.solvers.minizinc_solver import Minizinc
 import datetime
 
 SOLVER_TIMEOUT = 300

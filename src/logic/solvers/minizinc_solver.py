@@ -1,18 +1,18 @@
-from ...entities.event import Event
+from src.entities.event import Event
 
-from ..solvers.solver import Solver
+from src.logic.solvers.solver import Solver
 from minizinc import Instance, Model
 from minizinc import Solver as MZNSolver
 from copy import deepcopy
-from ..categories_modificators.courses_joiner_low import CoursesJoinerLow
+from src.logic.categories_modificators.courses_joiner_low import CoursesJoinerLow
 
-from ..solvers.power_2_more_capacity_wrapper import Power2SolverMoreCapacityWrapper
-from ..solvers.best_interval_chooser import BestIntervalChooser
-from ..solvers.power_2_algorithm import Power2Solver
-from ..solvers.greedy_long_at_first_solver import GreedyLongFirstSolver
-from ..solvers.greedy_algorithm_be_resources import GreedyByResouresSolver
-from ..solvers.lower_bound_solver import LowerBoundSolver
-from ..utils.category_prioritizer import CategoryPrioritizer
+from src.logic.solvers.power_2_more_capacity_wrapper import Power2SolverMoreCapacityWrapper
+from src.logic.solvers.best_interval_chooser import BestIntervalChooser
+from src.logic.solvers.power_2_algorithm import Power2Solver
+from src.logic.solvers.greedy_long_at_first_solver import GreedyLongFirstSolver
+from src.logic.solvers.greedy_algorithm_be_resources import GreedyByResouresSolver
+from src.logic.solvers.lower_bound_solver import LowerBoundSolver
+from src.logic.utils.category_prioritizer import CategoryPrioritizer
 
 
 class Minizinc(Solver):
@@ -73,7 +73,7 @@ class Minizinc(Solver):
                 % data
                 enum Categories = {self.__generate_categories(event)};
 
-                array[Categories] of int: idxs = 1..length(Categories); % for ordering the categories
+                array[Categories] of int: idxs = 1src.logic.length(Categories); % for ordering the categories
                 array[Categories] of int: gs; % minimal periods
                 array[Categories] of int: ps; % number of athletes
                 array[Categories] of string: cs; % courses of categories
@@ -85,9 +85,9 @@ class Minizinc(Solver):
                 int: maxG = (upperBoundLength+1) div (max(ps));
 
                 % variables
-                array[Categories] of var 0..upperBoundLength: Ss; %starts
-                array[Categories] of var 0..upperBoundLength: Gs; %periods
-                var lowerBoundLength..upperBoundLength: cmax; %end of schedule
+                array[Categories] of var 0src.logic.upperBoundLength: Ss; %starts
+                array[Categories] of var 0src.logic.upperBoundLength: Gs; %periods
+                var lowerBoundLengthsrc.logic.upperBoundLength: cmax; %end of schedule
                 var float: objective;
                 var float: schedule_earliness;
 
@@ -158,9 +158,9 @@ class Minizinc(Solver):
         cats = event.get_not_empty_categories_with_interval_start()
         return f'''
             constraint global_cardinality_low_up_closed({self.__generate_all_athletes_starts_query(cats.values())},
-                                            [i| i in 0..upperBoundLength],
-                                            [0| i in 0..upperBoundLength],
-                                            [capacity|i in 0..upperBoundLength]);
+                                            [i| i in 0src.logic.upperBoundLength],
+                                            [0| i in 0src.logic.upperBoundLength],
+                                            [capacity|i in 0src.logic.upperBoundLength]);
         '''
     
     def __generate_resources_constraint(self, event):
@@ -194,7 +194,7 @@ class Minizinc(Solver):
     
     def __generate_category_all_starts_query(self, cat):
         cat_name = cat.name.replace("-", "")
-        return f"[Ss[{cat_name}] + Gs[{cat_name}]*t| t in 0..ps[{cat_name}]-1]"
+        return f"[Ss[{cat_name}] + Gs[{cat_name}]*t| t in 0src.logic.ps[{cat_name}]-1]"
     
     def __generate_categories(self, event):
         cats = event.get_not_empty_categories_with_interval_start()
