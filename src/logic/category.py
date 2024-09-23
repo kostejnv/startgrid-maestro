@@ -8,7 +8,7 @@ class Category:
         self.min_interval = 1
         self.vacants_count = 0
         self.categories_w_same_course = []
-        self.first_control = "-1"
+        self.first_control = f'unknown_{name}'
         self.course = f'without_course_{name}'
         self.near_category = []
         self.far_category = []
@@ -38,8 +38,8 @@ def parse_category(cat_dict:Dict[str,Any]) -> Category:
     cat.min_interval = int(cat_dict['min_interval'])
     cat.vacants_count = int(cat_dict['vacants_count'])
     cat.categories_w_same_course = [course for course in cat_dict['categories_w_same_course']]
-    cat.first_control = cat_dict['first_control']
-    cat.course = cat_dict['course'] if cat_dict['course'] != None else f'withut_course_{cat.name}'
+    cat.first_control = cat_dict['first_control'] if cat_dict['first_control'] else cat.first_control
+    cat.course = cat_dict['course'] if cat_dict['course'] else cat.course
     cat.near_category = [cat for cat in cat_dict['near_category']]
     cat.far_category = [ cat for cat in cat_dict['far_category']]
     cat.final_interval = cat_dict['final_interval']
