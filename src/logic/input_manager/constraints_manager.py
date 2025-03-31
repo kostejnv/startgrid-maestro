@@ -41,7 +41,7 @@ class ConstrainsManager:
             elif cat_data.get_category_count() <= 15:
                 cat_data.min_interval = 3
             else:
-                if cat_name in ['H10', 'D10', 'H12A', 'H12B', 'D12A', 'D12B', 'H14A', 'H14B', 'D14A', 'D14B',]:
+                if cat_name in ['H10C', 'D10C', 'H12C', 'H12D', 'D12C', 'D12D', 'H14C', 'H14D', 'D14C', 'D14D',]:
                     cat_data.min_interval = 3
                 else:
                     cat_data.min_interval = 2
