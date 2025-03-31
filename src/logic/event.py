@@ -86,7 +86,7 @@ class Event:
         if not self.solved:
             raise "ERROR: Event has not been solved yet"
         data = ['Kategorie, START, INTERVAL, Pocet zavodniku, Int. start, Min. interval, Pocet vakantu, Trat, 1. kontrola'] + [
-            f'{cat.name}, {cat.final_start}, {cat.final_interval}, {cat.get_category_count()}, {cat.has_interval_start}, {cat.min_interval}, {cat.vacants_count}, {cat.course}, {cat.first_control}' for cat in self.categories.values()]
+            f'{cat.name}, {cat.final_start}, {cat.final_interval}, {len(cat.athletes)}, {cat.has_interval_start}, {cat.min_interval}, {cat.vacants_count}, {cat.course}, {cat.first_control}' for cat in self.categories.values()]
         return '\n'.join(data)
         
 
