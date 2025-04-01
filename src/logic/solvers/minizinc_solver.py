@@ -110,9 +110,9 @@ class Minizinc(Solver):
 
                 % gap between categories with same courses
                 constraint forall([ if Ss[i] > finish(j)
-                                        then Ss[i]-finish(j) >= max([Gs[i], Gs[j]])
-                                    elseif Ss[j] > finish(j)
-                                        then Ss[j]-finish(i) >= max([Gs[i], Gs[j]])
+                                        then Ss[i]-finish(j) >= 2 * max([Gs[i], Gs[j]])
+                                    elseif Ss[j] > finish(i)
+                                        then Ss[j]-finish(i) >= 2 * max([Gs[i], Gs[j]])
                                     else false endif
                                     | i,j in Categories where idxs[j] > idxs[i] /\ cs[i] == cs[j]]);
 
