@@ -77,16 +77,16 @@ class Event:
 
     def export_input_data_to_dict(self) -> json:
         if not self.has_data:
-            raise "ERROR: No data imported"
+            raise RuntimeError("ERROR: No data imported")
         event_dict = self.__dict__
         event_dict['categories'] = [cat.to_dict() for cat in event_dict['categories'].values()]
         return event_dict
     
     def export_final_data_to_csv(self) -> csv:
         if not self.solved:
-            raise "ERROR: Event has not been solved yet"
-        data = ['Kategorie, START, INTERVAL, Pocet zavodniku, Int. start, Min. interval, Pocet vakantu, Trat, 1. kontrola'] + [
-            f'{cat.name}, {cat.final_start}, {cat.final_interval}, {len(cat.athletes)}, {cat.has_interval_start}, {cat.min_interval}, {cat.vacants_count}, {cat.course}, {cat.first_control}' for cat in self.categories.values()]
+            raise RuntimeError("ERROR: Event has not been solved yet")
+        data = ['Kategorie,Int. start,1. kontrola,Trat,Min. Interval,Pocet zavodniku,Pocet vakantu,Celkovy pocet,START,INTERVAL,Cas posledniho'] + [
+            f'{cat.name},{cat.has_interval_start},{cat.first_control},{cat.course},{cat.min_interval},{len(cat.athletes)},{cat.vacants_count},{cat.get_category_count()},{cat.final_start},{cat.final_interval},{cat.get_last_athlete_startime()}' for cat in self.categories.values()]
         return '\n'.join(data)
         
 
